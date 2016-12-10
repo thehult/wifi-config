@@ -15,7 +15,7 @@ module.exports = function(opts, cb) {
         _log("Got a request")
         iwlist.scan('wlan0', function(err, networks) {
             _log("Scanned.")
-            if(err) res.end(err);
+            if(err) return console.log(err);
             result = "";
             for(var i = 0; i < networks.length; i++) {
                 result += networks[i].ssis + ", ";

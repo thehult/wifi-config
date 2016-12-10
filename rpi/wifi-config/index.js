@@ -13,7 +13,7 @@ module.exports = function(opts, cb) {
 
     function handleRequest(req, res) {
         _log("Got a request")
-        iwlist.scan('wlan0', function(err, networks) {
+        iwlist.scan({ iface: 'wlan0', show_hidden: true}, function(err, networks) {
             _log("Scanned.")
             if(err) return console.log(err);
             result = "";

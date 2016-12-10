@@ -9,6 +9,5 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "wireless-tools": "^0.18.1"
   }
 }

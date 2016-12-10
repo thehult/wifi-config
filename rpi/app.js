@@ -2,20 +2,25 @@
 var wifi = require('./wifi-config');
 
 var options = {
+    interface: 'wlan0',
+    logging: true,
     accessPoint: {
         channel: 6,
         driver: 'nl80211',
         hw_mode: 'g',
-        interface: 'wlan0',
-        ssid: 'SIOS Fjorngryn',
-        wpa: 0
+        ssid: 'SIOS Fjorgyn',
+        wpa: 2,
+        wpa_passphrase: '123qweasd'
     },
     http: {
         port: 8000
     }
 };
 
-wifi(options);
+wifi(options, function(err) {
+    if(err) return console.log(err);
+    console.log("We have wifi!");
+});
 /*
 var https = require('https');
 var querystring = require('querystring');

@@ -27,16 +27,16 @@ module.exports = function(opts, cb) {
         var server = http.createServer(handleRequest);
         server.on('listening', function() {
             _log("Server started at " + server.address());
-        })
+        });
         server.listen(options.http.port || 3000);
     }
 
 
 
 
-    let options = opts;
-    let callback = cb;
-    let logging = opts.logging || false;
+    var options = opts;
+    var callback = cb;
+    var logging = opts.logging || false;
     console.log(logging);
     _log("Checking " + opts.interface + " status");
     ifconfig.status(function(err, status) {

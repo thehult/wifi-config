@@ -21,14 +21,16 @@ module.exports = function(opts, cb) {
 
         ifconfig.down(options.interface, function(err) {
             if (err) return callback(err);
+            _log(options.interface + " down")
             var up_options = {
-                interface: 'wlan0',
+                interface: options.interface,
                 ipv4_address: '192.168.10.1',
                 ipv4_broadcast: '192.168.10.255',
                 ipv4_subnet_mask: '255.255.255.0'
             };
             ifconfig.up(up_options, function(err) {
                 if (err) return callback(err);
+                _log(options.interface + " up")
                 var dhcp_options = {
                     interface: options.interface,
                     start: '192.168.10.100',
@@ -41,9 +43,11 @@ module.exports = function(opts, cb) {
                 };
                 udhcpd.enable(dhcp_options, function(err) {
                     if (err) return callback(err);
+                    _log("DHCP server started");
                     hostapd.enable(options.accessPoint, function(err) {
                         if (err) return callback(err);
-                        accessPoint_started()
+                        _log("hostapd started");
+                        accessPoint_started();
                     });
                 });
             });
@@ -51,10 +55,10 @@ module.exports = function(opts, cb) {
     }
 
     function accessPoint_started() {
-        _log("Started Access Point, starting http-server")
         var server = http.createServer(handleRequest);
         server.on('listening', function() {
-            _log("Server started at " + server.address());
+            var servaddress = server.address();
+            _log("Server started at " + servaddress.address + ":" + servaddress.port);
         });
         server.listen(options.http.port || 3000);
     }

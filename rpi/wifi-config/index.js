@@ -1,6 +1,7 @@
 var ifconfig = require('wireless-tools/ifconfig');
 var hostapd = require('wireless-tools/hostapd');
 var udhcpd = require('wireless-tools/udhcpd');
+var iwlist = require('wireless-tools/iwlist')
 var http = require('http');
 
 

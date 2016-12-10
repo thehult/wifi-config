@@ -22,6 +22,7 @@ app.post('/greenhouse/update', function(req, res) {
     if(err) throw err;
     console.log('Logged: ' + req.body.test);
   });
+  res.send("Thanks mate");
 });
 
 https.createServer(config.ssl, app).listen(3000, function() {

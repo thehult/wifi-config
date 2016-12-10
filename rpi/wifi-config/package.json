@@ -1,0 +1,33 @@
+{
+  "name": "wifi-config",
+  "version": "0.1.0",
+  "description": "A package that lets you configure the WiFi of a small device from your phone.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thehult/wifi-config.git"
+  },
+  "keywords": [
+    "NodeJS",
+    "wifi",
+    "wlan",
+    "access",
+    "point",
+    "ap",
+    "raspberry",
+    "pi",
+    "rpi"
+  ],
+  "author": "TheHult",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thehult/wifi-config/issues"
+  },
+  "homepage": "https://github.com/thehult/wifi-config#readme",
+  "dependencies": {
+    "wireless-tools": "^0.18.1"
+  }
+}

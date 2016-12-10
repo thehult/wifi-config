@@ -60,7 +60,7 @@ module.exports = function(opts, cb) {
             var servaddress = server.address();
             _log("Server started at " + servaddress.address + ":" + servaddress.port);
         });
-        server.listen(options.http.port || 3000);
+        server.listen(options.http.port || 3000, "192.168.10.1");
     }
 
 

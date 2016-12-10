@@ -11,14 +11,17 @@ module.exports = function(opts, cb) {
     }
 
     function handleRequest(req, res) {
+        _log("Got a request")
         iwlist.scan('wlan0', function(err, networks) {
+            _log("Scanned.")
             if(err) res.end(err);
             result = "";
             for(var i = 0; i < networks.length; i++) {
                 result += networks[i].ssis + ", ";
             }
+            _log("Sending: " + result);
+            res.end(result);
         });
-        res.end(result);
     }
 
 

@@ -12,6 +12,20 @@ var options = {
         wpa: 2,
         wpa_passphrase: '123qweasd'
     },
+    dhcp: {
+        start: '192.168.10.100',
+        end: '192.168.10.200',
+        option: {
+            router: '192.168.10.1',
+            subnet: '255.255.255.0',
+            dns: [ '4.4.4.4', '8.8.8.8' ]
+        }
+    },
+    iface: {
+        ipv4_address: '192.168.10.1',
+        ipv4_broadcast: '192.168.10.255',
+        ipv4_subnet_mask: '255.255.255.0'
+    },
     http: {
         port: 8000
     }

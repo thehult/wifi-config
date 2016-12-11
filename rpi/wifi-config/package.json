@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/thehult/wifi-config#readme",
   "dependencies": {
+    "async": "^2.1.4",
     "wireless-tools": "^0.18.1"
   }
 }

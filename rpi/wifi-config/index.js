@@ -2,6 +2,9 @@ var ifconfig = require('wireless-tools/ifconfig');
 var hostapd = require('wireless-tools/hostapd');
 var udhcpd = require('wireless-tools/udhcpd');
 var iwlist = require('wireless-tools/iwlist')
+
+var series = require('async/series');
+
 var http = require('http');
 
 
@@ -13,56 +16,86 @@ module.exports = function(opts, cb) {
 
     function handleRequest(req, res) {
         _log("Got a request")
-        iwlist.scan({ iface: 'wlan0', show_hidden: true}, function(err, networks) {
-            _log("Scanned.")
-            if(err) return console.log(err);
-            result = "";
-            for(var i = 0; i < networks.length; i++) {
-                result += networks[i].ssis + ", ";
-            }
-            _log("Sending: " + result);
-            res.end(result);
+        res.end("YO!");
+    }
+
+    function _iwlist_scan(cb) {
+        iwlist.scan({ iface: options.interface, show_hidden: true}, function(err, networks) {
+            if(err) cb(err);
+            _log("scanned wifi");
+            cb(null, networks);
+        });
+    }
+
+    function _ifconfig_down(cb) {
+        ifconfig.down(options.interface, function(err) {
+            if(err) cb(err, "");
+            _log(options.interface + " down");
+            cb(null);
+        });
+    }
+
+    function _ifconfig_up(cb) {
+        options.iface.interface = options.interface;
+        ifconfig.up(options.iface, function(err) {
+            if(err) cb(err);
+            _log(options.interface + " up");
+            cb(null);
+        });
+    }
+
+    function _udhcpd_disable(cb) {
+        udhcpd.disable(options.interface, function(err) {
+            if(err) cb(err);
+            _log("udhcpd disabled");
+            cb(null);
+        });
+    }
+
+    function _udhcpd_enable(cb) {
+        options.dhcp.interface = options.interface;
+        udhcpd.enable(options.dhcp, function(err) {
+            if(err) cb(err);
+            _log("udhcpd enabled");
+            cb(null);
+        });
+    }
+
+    function _hostapd_disable(cb) {
+        hostapd.disable(options.interface, function(err) {
+            if(err) cb(err);
+            _log("hostapd disabled");
+            cb(null);
+        });
+    }
+
+    function _hostapd_enable(cb) {
+        options.accessPoint.interface = options.interface;
+        hostapd.enable(options.accessPoint, function(err) {
+            if(err) cb(err);
+            _log("hostapd enabled");
+            cb(null);
         });
     }
 
 
     function startAccessPoint() {
         _log("Starting Access Point");
-        options.accessPoint.interface = options.interface;
 
-        ifconfig.down(options.interface, function(err) {
-            if (err) return callback(err);
-            _log(options.interface + " down")
-            var up_options = {
-                interface: options.interface,
-                ipv4_address: '192.168.10.1',
-                ipv4_broadcast: '192.168.10.255',
-                ipv4_subnet_mask: '255.255.255.0'
-            };
-            ifconfig.up(up_options, function(err) {
-                if (err) return callback(err);
-                _log(options.interface + " up")
-                var dhcp_options = {
-                    interface: options.interface,
-                    start: '192.168.10.100',
-                    end: '192.168.10.200',
-                    option: {
-                        router: '192.168.10.1',
-                        subnet: '255.255.255.0',
-                        dns: [ '4.4.4.4', '8.8.8.8' ]
-                    }
-                };
-                udhcpd.enable(dhcp_options, function(err) {
-                    if (err) return callback(err);
-                    _log("DHCP server started");
-                    hostapd.enable(options.accessPoint, function(err) {
-                        if (err) return callback(err);
-                        _log("hostapd started");
-                        accessPoint_started();
-                    });
-                });
-            });
+        series([
+            _hostapd_disable,
+            _udhcpd_disable,
+            _ifconfig_down,
+            _ifconfig_up,
+            _iwlist_scan,
+            _udhcpd_enable,
+            _hostapd_enable
+        ], function(err, results) {
+            if(err) callback(err);
+            console.log(results);
+            accessPoint_started();
         });
+
     }
 
     function accessPoint_started() {

@@ -44,11 +44,19 @@ module.exports = function(opts, cb) {
     }
 
     function _iwlist_scan(cb) {
-        iwlist.scan({ iface: options.interface, show_hidden: true}, function(err, networks) {
-            if(err) return cb(err);
-            _log("scanned wifi");
-            cb(null, networks);
+        var nets = [];
+        until(function() {
+            return nets.length > 0;
+        }, function(_cb) {
+            iwlist.scan({ iface: options.interface, show_hidden: true}, function(err, networks) {
+                _log("scanned wifi");
+                nets = networks;
+                _cb(null);
+            });
+        }, function(err, results) {
+            cb(null, nets);
         });
+
     }
 
     function _ifconfig_down(cb) {

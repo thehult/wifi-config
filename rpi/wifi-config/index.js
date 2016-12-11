@@ -10,6 +10,8 @@ var http = require('http');
 
 
 module.exports = function(opts, cb) {
+    var wifiNetworks = [];
+
     function _log(str) {
         if(logging)
             console.log("wifi-config: " + str);
@@ -17,7 +19,13 @@ module.exports = function(opts, cb) {
 
     function handleRequest(req, res) {
         _log("Got a request")
-        res.end("YO!");
+
+        var resp = "";
+        for(var i = 0; i < wifiNetworks.length; i++) {
+            resp += wifiNetworks[i].ssid + "<br />";
+        }
+
+        res.end(resp);
     }
 
     function _ifconfig_wait_for_up(cb) {
@@ -50,10 +58,12 @@ module.exports = function(opts, cb) {
         }, function(_cb) {
             iwlist.scan({ iface: options.interface, show_hidden: true}, function(err, networks) {
                 _log("scanned wifi");
-                nets = networks;
+                if(typeof networks !== 'undefined')
+                    nets = networks;
                 _cb(null);
             });
         }, function(err, results) {
+            wifiNetworks = nets;
             cb(null, nets);
         });
 

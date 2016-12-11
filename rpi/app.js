@@ -27,7 +27,7 @@ var options = {
         ipv4_subnet_mask: '255.255.255.0'
     },
     http: {
-        port: 8000
+        port: 80
     }
 };
 

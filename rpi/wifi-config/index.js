@@ -22,7 +22,7 @@ module.exports = function(opts, cb) {
 
         var resp = "";
         for(var i = 0; i < wifiNetworks.length; i++) {
-            resp += wifiNetworks[i].ssid + "<br />";
+            resp += wifiNetworks[i].ssid + "\n";
         }
 
         res.end(resp);
@@ -57,13 +57,13 @@ module.exports = function(opts, cb) {
             return nets.length > 0;
         }, function(_cb) {
             iwlist.scan({ iface: options.interface, show_hidden: true}, function(err, networks) {
-                _log("scanned wifi");
                 if(typeof networks !== 'undefined')
                     nets = networks;
                 _cb(null);
             });
         }, function(err, results) {
             wifiNetworks = nets;
+            _log("Scanned wifi");
             cb(null, nets);
         });
 
@@ -142,12 +142,10 @@ module.exports = function(opts, cb) {
     }
 
     function accessPoint_started() {
-        var server = http.createServer(handleRequest);
-        server.on('listening', function() {
-            var servaddress = server.address();
-            _log("Server started at " + servaddress.address + ":" + servaddress.port);
+        var app = require('app');
+        app.start(options.http.port || 3000, options.iface.ipv4_address, function(adr, port) {
+            _log("Server started at " + adr + ":" + port);
         });
-        server.listen(options.http.port || 3000, "192.168.10.1");
     }
 
 

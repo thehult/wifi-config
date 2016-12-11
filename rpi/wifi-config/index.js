@@ -25,6 +25,7 @@ module.exports = function(opts, cb) {
         until(function() {
             return isUp;
         }, function(_cb) {
+            _log("Checked status");
             ifconfig.status(options.interface, function(err, status) {
                 if(err) return _cb(err);
                 if(typeof status === 'undefined')
@@ -114,7 +115,7 @@ module.exports = function(opts, cb) {
             _udhcpd_enable,
             _hostapd_enable
         ], function(err, results) {
-            if(err) callback(err);
+            if(err) return callback(err);
             console.log(results);
             accessPoint_started();
         });

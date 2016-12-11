@@ -33,6 +33,7 @@ module.exports = function(opts, cb) {
                 if(typeof status.ipv4_address !== 'string')
                     return _cb(null);
                 isUp = true;
+                _log("Up on ip: " + status.ipv4_address);
                 return _cb(null);
             });
         }, function(err, results) {

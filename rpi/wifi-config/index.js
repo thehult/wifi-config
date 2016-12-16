@@ -143,7 +143,7 @@ module.exports = function(opts, cb) {
 
     function accessPoint_started() {
         var app = require('./app.js');
-        app.start(options.http.port || 3000, options.iface.ipv4_address, function(adr, port) {
+        app.start(options.http.port || 3000, options.iface.ipv4_address, wifiNetworks, function(adr, port) {
             _log("Server started at " + adr + ":" + port);
         });
     }

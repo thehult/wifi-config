@@ -1,7 +1,7 @@
 {
   "name": "wifi-config",
   "version": "0.1.0",
-  "description": "A package that lets you configure the WiFi of a small device from your phone.",
+  "description": "A package that lets you configure the WiFi of a raspberry pi from your phone.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
